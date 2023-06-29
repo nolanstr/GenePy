@@ -20,6 +20,14 @@ class Const:
     def _string(agraph_strings, node1, node2):
         return f"C_{node1}"
 
+class AConst:
+
+    def forward(_x, agraph_evals, agraph_consts, node1, node2):
+        return node2
+
+    def _string(agraph_strings, node1, node2):
+        return f"I_{node1}"
+
 class Add:
 
     def forward(_x, agraph_evals, agraph_consts, node1, node2):
