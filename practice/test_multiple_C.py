@@ -22,7 +22,6 @@ def backward_eval(y, _x, ders):
         dy_dx.append(perform_grad(dy_dx[-1], _x))
     dy_dx = torch.stack(dy_dx)
 
-    import pdb;pdb.set_trace()
     return dy_dx
 
 
@@ -46,7 +45,6 @@ def forward_string(operator_id, agraph_strings, node1, node2):
 agraph_command_array = np.array(
     [[1, 0, 0], [0, 0, 0], [0, 1, 1], [0, 2, 2], [2, 0, 1], [4, 4, 0], [3, 5, 3]]
 )
-# (((X_0 + C_0) * C_1) - C_2)
 _X = torch.arange(0, 5, dtype=torch.float64).reshape((-1, 1))
 _X.requires_grad = True
 agraph_consts = torch.tensor([2.0, 3.0, 4.0], requires_grad=True).repeat(4, 1)
@@ -61,9 +59,7 @@ for row in agraph_command_array:
     agraph_strings.append(forward_string(row[0], agraph_strings, row[1], row[2]))
 model_eval = agraph_evals[-1]
 model_string = agraph_strings[-1]
-print(model_string)
 dy_dx = backward_eval(model_eval, _X, 2)
 
-_Y = ((_X + agraph_consts[0, 0]) * agraph_consts[0, 1]) - agraph_consts[0, 2]
-
+print(model_string)
 import pdb;pdb.set_trace()
