@@ -23,9 +23,11 @@ class Const:
 class IConst:
 
     def forward(_x, agraph_evals, agraph_consts, node1, node2):
-        return node2
+        return torch.tensor([[node1]], requires_grad=True)
 
     def _string(agraph_strings, node1, node2):
+        if isinstance(node1, float):
+            return f"I_(1/{int(1/node1)})"
         return f"I_{node1}"
 
 class Add:
@@ -59,3 +61,35 @@ class Div:
 
     def _string(agraph_strings, node1, node2):
         return f"({agraph_strings[node1]} * {agraph_strings[node2]})"
+
+class Pow:
+
+    def forward(_x, agraph_evals, agraph_consts, node1, node2):
+        return torch.pow(agraph_evals[node1], agraph_evals[node2])
+
+    def _string(agraph_strings, node1, node2):
+        return f"({agraph_strings[node1]})^({agraph_strings[node2]})"
+
+class Sqrt:
+
+    def forward(_x, agraph_evals, agraph_consts, node1, node2):
+        return torch.sqrt(agraph_evals[node1])
+
+    def _string(agraph_strings, node1, node2):
+        return f"sqrt({agraph_strings[node1]})"
+
+class Exp:
+
+    def forward(_x, agraph_evals, agraph_consts, node1, node2):
+        return torch.exp(agraph_evals[node1])
+
+    def _string(agraph_strings, node1, node2):
+        return f"exp({agraph_strings[node1]})"
+
+class Log:
+
+    def forward(_x, agraph_evals, agraph_consts, node1, node2):
+        return torch.log(agraph_evals[node1])
+
+    def _string(agraph_strings, node1, node2):
+        return f"log({agraph_strings[node1]})"
