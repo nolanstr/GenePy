@@ -27,8 +27,8 @@ class IConst:
 
     def _string(agraph_strings, node1, node2):
         if isinstance(node1, float):
-            return f"I_(1/{int(1/node1)})"
-        return f"I_{node1}"
+            return f"(1/{int(1/node1)})"
+        return f"{node1}"
 
 class Add:
 
