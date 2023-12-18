@@ -8,13 +8,13 @@ class Organism:
         ----------
         self : [Argument]
         genotype : [Argument]
-        phenotype : [Argument]
+        expression : [Argument]
         age :default: 0 [Argument]
         fitness :default: None [Argument]
 
         """
         self._genotype = None
-        self._phenotype = None
+        self._expression = None
         self._age = None
         self._fitness = None
 
@@ -29,14 +29,14 @@ class Organism:
         return self._genotype
 
     @property
-    def phenotype(self):
+    def expression(self):
         """
         Parameters
         ----------
         self : [Argument]
 
         """
-        return self._phenotype
+        return self._expression
 
     @property
     def age(self):
@@ -69,16 +69,16 @@ class Organism:
         """
         self._genotype = genotype
 
-    @phenotype.setter
-    def phenotype(self, phenotype):
+    @expression.setter
+    def expression(self, expression):
         """
         Parameters
         ----------
         self : [Argument]
-        phenotype : [Argument]
+        expression : [Argument]
 
         """
-        self.phenotype = phenotype
+        self.expression = expression
 
     @age.setter
     def age(self, age):

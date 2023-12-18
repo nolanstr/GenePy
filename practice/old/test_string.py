@@ -3,7 +3,7 @@ from sympy import srepr
 from sympy.core.traversal import postorder_traversal, preorder_traversal
 import sympy.parsing as sp
 
-from sumpy.core.add import Add
+from sympy.core.add import Add
 
 op_dict = {}
 #variables = s.symbols("X_0")

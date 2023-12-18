@@ -39,7 +39,7 @@ power).
 """
 
 
-def genotype_from_phenotype(structure, simplify=True):
+def genotype_from_expression(structure, simplify=True):
     """
     Parameters
     ----------
@@ -47,8 +47,8 @@ def genotype_from_phenotype(structure, simplify=True):
     simplify :default: True [Argument]
 
     """
+
     expression = make_sympy_expression(structure)
-    print(expression)
     if simplify:
         ints, floats = extract_constants(expression)
         expression = replace_constants(expression, ints)
@@ -59,7 +59,6 @@ def genotype_from_phenotype(structure, simplify=True):
         ints, floats = extract_constants(expression)
         expression = replace_constants(expression, ints)
         expression = replace_constants(expression, floats)
-    print(f"kjh: {expression}")
     genes = []
     row = 0
 
@@ -294,4 +293,4 @@ def get_op(node):
     elif str(node) == "tanh" or isinstance(node, sympy.tanh):
         return "tanh"
     else:
-        raise NotImplementedError("operator not implemented/bad phenotype description")
+        raise NotImplementedError("operator not implemented/bad expression description")

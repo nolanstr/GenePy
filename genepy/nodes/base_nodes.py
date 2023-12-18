@@ -23,7 +23,10 @@ class Const:
 class IConst:
 
     def forward(_x, agraph_evals, agraph_consts, node1, node2):
-        return torch.tensor([[node1]], requires_grad=True)
+        """
+        Changed from true as constants cant have requires grad
+        """
+        return torch.tensor([[node1]], requires_grad=False)
 
     def _string(agraph_strings, node1, node2):
         if isinstance(node1, float):

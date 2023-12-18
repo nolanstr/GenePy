@@ -62,4 +62,6 @@ model_string = agraph_strings[-1]
 dy_dx = backward_eval(model_eval, _X, 2)
 
 print(model_string)
+print(model_string)
+print(dy_dx)
 import pdb;pdb.set_trace()
