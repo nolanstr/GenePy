@@ -17,18 +17,19 @@ op_dict = {
     "mul": 4,
     "div": 5,
     "pow": 6,
-    "sqrt": 7,
-    "exp": 8,
-    "log": 9,
-    "sin": 10,
-    "cos": 11,
-    "tan": 12,
-    "asin": 13,
-    "acos": 14,
-    "atan": 15,
-    "sinh": 16,
-    "cosh": 17,
-    "tanh": 18,
+    "square": 7,
+    "sqrt": 8,
+    "exp": 9,
+    "log": 10,
+    "sin": 11,
+    "cos": 12,
+    "tan": 13,
+    "asin": 14,
+    "acos": 15,
+    "atan": 16,
+    "sinh": 17,
+    "cosh": 18,
+    "tanh": 19,
 }
 """
 Curently, sympy does not support a sympy.Sub expression and thus all expressions
@@ -49,6 +50,7 @@ def genotype_from_expression(structure, simplify=True):
     """
 
     expression = make_sympy_expression(structure)
+    print(expression)
     check = True
     if simplify:
         while check: 
@@ -102,6 +104,7 @@ def genotype_from_expression(structure, simplify=True):
             for arg in args:
                 sub_structure.append(traverse(arg))
             op = get_op(node)
+
             return nest_structure(sub_structure, op)
 
     def nest_structure(structure, op):

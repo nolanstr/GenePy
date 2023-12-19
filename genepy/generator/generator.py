@@ -69,6 +69,17 @@ class Generator:
         genotype = self.generate_genotype()
         equation = Equation(genotype=genotype)
         return equation
+    
+    def add_operators(self, operators):
+        """
+        Parameters
+        ----------
+        self : object [Argument]
+        operators : [Argument]
+
+        """
+        for operator in operators:
+            self.add_operator(operator)
 
     def add_operator(self, operator):
         """
@@ -151,7 +162,9 @@ class Generator:
         ----------
         self : object [Argument]
         current_stack_size : [Argument]
+            n : [Argument]
         n : [Argument]
+            n : [Argument]
 
         """
         #p = np.exp(current_stack_size)

@@ -211,6 +211,32 @@ class Pow:
         """
         return f"({agraph_strings[node1]})^({agraph_strings[node2]})"
 
+class Square:
+
+    def forward(_x, agraph_evals, agraph_consts, node1, node2):
+        """
+        Parameters
+        ----------
+        _x : [Argument]
+        agraph_evals : [Argument]
+        agraph_consts : [Argument]
+        node1 : [Argument]
+        node2 : [Argument]
+
+        """
+        return torch.square(agraph_evals[node1])
+
+    def _string(agraph_strings, node1, node2):
+        """
+        Parameters
+        ----------
+        agraph_strings : [Argument]
+        node1 : [Argument]
+        node2 : [Argument]
+
+        """
+        return f"({agraph_strings[node1]})^(2)"
+
 class Sqrt:
 
     def forward(_x, agraph_evals, agraph_consts, node1, node2):

@@ -178,13 +178,10 @@ class Equation(Organism):
 
         """
         df_dc = torch.zeros((f.shape[0], f.shape[1], self.constants.shape[1]))
-        try:
-            for i, f_i in enumerate(f):
-                for j, f_j in enumerate(f_i):
-                    df_dc[i,j,:] = grad(f_j.sum(), self.constants,
-                            retain_graph=True, materialize_grads=True)[0]
-        except:
-            import pdb;pdb.set_trace()
+        for i, f_i in enumerate(f):
+            for j, f_j in enumerate(f_i):
+                df_dc[i,j,:] = grad(f_j.sum(), self.constants,
+                        retain_graph=True, materialize_grads=True)[0]
         return df_dc
     
     def copy(self):
@@ -196,4 +193,6 @@ class Equation(Organism):
         """
         equation = Equation(genotype=self.genotype)
         equation.fitness = self.fitness
+        equation.constants = self.constants
+
         return equation
