@@ -32,6 +32,14 @@ SUPPORTED_OPS = BIVARIATE_OPS + UNIVARIATE_OPS
 
 class Generator:
     def __init__(self, genotype_size=32, X_dim=1):
+        """
+        Parameters
+        ----------
+        self : object [Argument]
+        genotype_size :default: 32 [Argument]
+        X_dim :default: 1 [Argument]
+
+        """
         self._genotype_size = genotype_size
         self._X_dim = X_dim
         self._operators = [0, 1]
@@ -40,16 +48,36 @@ class Generator:
         self._bivariate_nodes = []
 
     def __call__(self, samples=1):
+        """
+        Parameters
+        ----------
+        self : object [Argument]
+        samples :default: 1 [Argument]
+
+        """
         if samples == 1:
             return self._generate_equation()
         return [self._generate_equation() for _ in range(samples)]
 
     def _generate_equation(self):
+        """
+        Parameters
+        ----------
+        self : object [Argument]
+
+        """
         genotype = self.generate_genotype()
         equation = Equation(genotype=genotype)
         return equation
 
     def add_operator(self, operator):
+        """
+        Parameters
+        ----------
+        self : object [Argument]
+        operator : [Argument]
+
+        """
         if operator in UNIVARIATE_OPS:
             self._operators.append(UNIVARIATE_DICT[operator.lower()])
             self._univariate_nodes.append(UNIVARIATE_DICT[operator.lower()])
@@ -61,6 +89,12 @@ class Generator:
         self._operators = list(set(self._operators))
 
     def generate_genotype(self):
+        """
+        Parameters
+        ----------
+        self : object [Argument]
+
+        """
         genotype = np.zeros((self._genotype_size, 3)).astype(int)
         constants_count = 0
         genotype[0, :], constants_count = self._sample_gene(
@@ -80,6 +114,15 @@ class Generator:
         return genotype
 
     def _sample_gene(self, operators, constants_count, current_stack_size):
+        """
+        Parameters
+        ----------
+        self : object [Argument]
+        operators : [Argument]
+        constants_count : [Argument]
+        current_stack_size : [Argument]
+
+        """
         if len(operators) == len(self._operators) and \
                                     len(self._operators)>2:
             non_leaf_count = len(operators) - 2
@@ -103,11 +146,25 @@ class Generator:
         return gene, constants_count
 
     def _sample_nodes(self, current_stack_size, n):
+        """
+        Parameters
+        ----------
+        self : object [Argument]
+        current_stack_size : [Argument]
+        n : [Argument]
+
+        """
         #p = np.exp(current_stack_size)
         idxs = np.arange(0, current_stack_size)
         nodes = np.random.randint(0, current_stack_size, size=n).tolist()
         return nodes
 
     def _sample_X_idx(self):
+        """
+        Parameters
+        ----------
+        self : object [Argument]
+
+        """
         idx = np.random.randint(0, self._X_dim)
         return [idx, idx]

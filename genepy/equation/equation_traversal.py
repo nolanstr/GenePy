@@ -33,6 +33,14 @@ bivariate_nodes = [2, 3, 4, 5, 6]
 
 
 def forward_eval(genotype, constants, X):
+    """
+    Parameters
+    ----------
+    genotype : [Argument]
+    constants : [Argument]
+    X : [Argument]
+
+    """
     genotype_evals = []
     for gene in genotype:
         try:
@@ -46,5 +54,16 @@ def forward_eval(genotype, constants, X):
 
 
 def _forward_eval(operator_id, _x, genotype_evals, genotype_consts, node1, node2):
+    """
+    Parameters
+    ----------
+    operator_id : [Argument]
+    _x : [Argument]
+    genotype_evals : [Argument]
+    genotype_consts : [Argument]
+    node1 : [Argument]
+    node2 : [Argument]
+
+    """
     op = NODE_DICT[str(operator_id)]
     return op.forward(_x, genotype_evals, genotype_consts, node1, node2)

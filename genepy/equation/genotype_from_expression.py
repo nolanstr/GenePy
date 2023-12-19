@@ -157,6 +157,12 @@ def genotype_from_expression(structure, simplify=True):
             }
 
     def update_genes(new_gene):
+        """
+        Parameters
+        ----------
+        new_gene : [Argument]
+
+        """
         nonlocal genes, row
         for i, gene in enumerate(genes):
             if new_gene == gene[0]:
@@ -175,6 +181,12 @@ def genotype_from_expression(structure, simplify=True):
     return structure_dict, ints, floats, genes
 
 def clean_constants_in_genes(genes):
+    """
+    Parameters
+    ----------
+    genes : [Argument]
+
+    """
     constant_idxs = np.argwhere(genes[:,0].flatten()==0).flatten()
     constant_tags = np.unique(genes[constant_idxs,1])
     for i, constant_tag in enumerate(constant_tags):
@@ -185,6 +197,12 @@ def clean_constants_in_genes(genes):
 
 
 def unary_op(op):
+    """
+    Parameters
+    ----------
+    op : [Argument]
+
+    """
     return op in ["e", "exp", "log", "sin", "cos", "tan", 
                     "asin", "acos", "atan", "sinh", "cosh", "tanh"]
 
@@ -234,6 +252,13 @@ def extract_constants(expression):
 
 
 def replace_constants(expression, consts_dict):
+    """
+    Parameters
+    ----------
+    expression : [Argument]
+    consts_dict : [Argument]
+
+    """
     replacement_symbols = [sympy.Symbol(symbol) for symbol in consts_dict.keys()]
     replaced_expression = expression.subs(
         list(zip(consts_dict.values(), replacement_symbols))

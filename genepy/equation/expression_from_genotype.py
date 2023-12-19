@@ -26,6 +26,12 @@ NODE_DICT = {
 
 
 def expression_from_genotype(genotype):
+    """
+    Parameters
+    ----------
+    genotype : [Argument]
+
+    """
     agraph_strings = []
     for row in genotype:
         agraph_strings.append(forward_string(row[0], agraph_strings, row[1], row[2]))
@@ -34,5 +40,14 @@ def expression_from_genotype(genotype):
 
 
 def forward_string(operator_id, agraph_strings, node1, node2):
+    """
+    Parameters
+    ----------
+    operator_id : [Argument]
+    agraph_strings : [Argument]
+    node1 : [Argument]
+    node2 : [Argument]
+
+    """
     op = NODE_DICT[str(operator_id)]
     return op._string(agraph_strings, node1, node2)
