@@ -35,9 +35,12 @@ bivariate_nodes = [2, 3, 4, 5, 6]
 def forward_eval(genotype, constants, X):
     genotype_evals = []
     for gene in genotype:
-        genotype_evals.append(
-            _forward_eval(gene[0], X, genotype_evals, constants, gene[1], gene[2])
-        )
+        try:
+            genotype_evals.append(
+                _forward_eval(gene[0], X, genotype_evals, constants, gene[1], gene[2])
+            )
+        except:
+            print(genotype, constants)
     equation_forward_eval = genotype_evals[-1]
     return equation_forward_eval
 

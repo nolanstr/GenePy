@@ -74,22 +74,39 @@ class Generator:
 
         for i in range(2, self._genotype_size):
             genotype[i, :], constants_count = self._sample_gene(
-                self._operators, constants_count, current_stack_size=2
+                self._operators, constants_count, current_stack_size=i
             )
 
         return genotype
 
     def _sample_gene(self, operators, constants_count, current_stack_size):
-        operator = np.random.choice(operators)
+        if len(operators) == len(self._operators) and \
+                                    len(self._operators)>2:
+            non_leaf_count = len(operators) - 2
+            operator = np.random.choice(operators, 
+                    p=[0.1, 0.1]+[0.8/non_leaf_count]*non_leaf_count)
+        else:
+            operator = np.random.choice(operators)
+
         if operator == 0:
             gene = [operator, constants_count, constants_count]
             constants_count += 1
         elif operator == 1:
             gene = [operator] + self._sample_X_idx()
+        elif operator in self._univariate_nodes:
+            node = self._sample_nodes(current_stack_size, n=1)
+            gene = [operator] + node*2
         else:
-            nodes = np.random.randint(0, current_stack_size, size=2)
-            gene = [operator] + nodes.tolist()
+            nodes = self._sample_nodes(current_stack_size, n=2)
+            gene = [operator] + nodes
+
         return gene, constants_count
+
+    def _sample_nodes(self, current_stack_size, n):
+        #p = np.exp(current_stack_size)
+        idxs = np.arange(0, current_stack_size)
+        nodes = np.random.randint(0, current_stack_size, size=n).tolist()
+        return nodes
 
     def _sample_X_idx(self):
         idx = np.random.randint(0, self._X_dim)

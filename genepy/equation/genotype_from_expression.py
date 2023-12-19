@@ -49,12 +49,16 @@ def genotype_from_expression(structure, simplify=True):
     """
 
     expression = make_sympy_expression(structure)
+    check = True
     if simplify:
-        ints, floats = extract_constants(expression)
-        expression = replace_constants(expression, ints)
-        expression = sympify(expression, evaluate=True)
-        ints, floats = extract_constants(expression)
-        expression = replace_constants(expression, floats)
+        while check: 
+            ints, floats = extract_constants(expression)
+            list_ints = list(ints.values())
+            expression = replace_constants(expression, ints)
+            expression = sympify(expression, evaluate=True)
+            ints, floats = extract_constants(expression)
+            expression = replace_constants(expression, floats)
+            check = (len(list_ints) != 0)
     else:
         ints, floats = extract_constants(expression)
         expression = replace_constants(expression, ints)
@@ -166,8 +170,18 @@ def genotype_from_expression(structure, simplify=True):
     genes = np.vstack([np.array(gene[0], dtype=object) for gene in genes])[
         np.argsort(genes_order), :
     ]
-    
+
+    genes = clean_constants_in_genes(genes)
     return structure_dict, ints, floats, genes
+
+def clean_constants_in_genes(genes):
+    constant_idxs = np.argwhere(genes[:,0].flatten()==0).flatten()
+    constant_tags = np.unique(genes[constant_idxs,1])
+    for i, constant_tag in enumerate(constant_tags):
+        constant_tag_idxs = np.argwhere(genes[constant_idxs,1]==constant_tag)
+        genes[constant_idxs[constant_tag_idxs], 1:] = i
+     
+    return genes
 
 
 def unary_op(op):
@@ -215,6 +229,7 @@ def extract_constants(expression):
                 ints[f"R_{n}_{d}"] = term
             else:
                 raise NotImplementedError("extract constant unknown")
+
     return ints, floats
 
 

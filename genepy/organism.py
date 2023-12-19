@@ -102,6 +102,7 @@ class Organism:
         """
         self._fitness = fitness
 
+    @abstractmethod
     def copy(self):
         """
         Parameters
@@ -109,7 +110,7 @@ class Organism:
         self : [Argument]
 
         """
-        return copy.deepcopy(self)
+        raise NotImplementedError
     
     @abstractmethod
     def __str__(self):
