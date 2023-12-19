@@ -206,7 +206,7 @@ def unary_op(op):
     op : [Argument]
 
     """
-    return op in ["e", "exp", "log", "sin", "cos", "tan", 
+    return op in ["square", "e", "exp", "log", "sin", "cos", "tan", 
                     "asin", "acos", "atan", "sinh", "cosh", "tanh"]
 
 def make_sympy_expression(string):
