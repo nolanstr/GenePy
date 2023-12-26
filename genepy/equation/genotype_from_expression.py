@@ -1,12 +1,17 @@
 import torch
 import numpy as np
 import re
+
+C_pattern = re.compile(r"C_\d+")
+I_pattern = re.compile(r"I_\d+")
 import sympy
 import sympy.parsing as sp
 from sympy import symbols, srepr, sympify, fraction
 from sympy.core.traversal import postorder_traversal, preorder_traversal
 from sympy.core.numbers import Float, Integer, Rational
-from sympy import exp, log, sin, cos, tan, asin, acos, atan, sinh, cosh, tanh
+from sympy import sqrt, exp, log, sin, cos, tan, asin, acos, atan, sinh, cosh, tanh
+
+sympy_operators = [sqrt, exp, log, sin, cos, tan, asin, acos, atan, sinh, cosh, tanh]
 
 op_dict = {
     "pconst": -1,
@@ -40,6 +45,56 @@ power).
 """
 
 
+def update_dict(DICT, _DICT):
+    """
+    Parameters
+    ----------
+    DICT : [Argument]
+    _DICT : [Argument]
+
+    """
+    update = False
+    for key in _DICT.keys():
+        if key in DICT.keys():
+            pass
+        else:
+            DICT[key] = _DICT[key]
+            update = True
+    return DICT, update
+
+
+def update_ints_floats(ints, floats, _ints, _floats):
+    """
+    Parameters
+    ----------
+    ints : [Argument]
+    floats : [Argument]
+    _ints : [Argument]
+    _floats : [Argument]
+
+    """
+    ints, ints_update = update_dict(ints, _ints)
+    floats, floats_update = update_dict(floats, _floats)
+    return ints, floats, ints_update or floats_update
+
+
+def check_unknowns(expression):
+    """
+    Parameters
+    ----------
+    expression : [Argument]
+
+    """
+
+    C_values = list(set(C_pattern.findall(expression)))
+    I_values = list(set(I_pattern.findall(expression)))
+
+    ints = {I_value: 1 for I_value in I_values}
+    floats = {C_value: 1.0 for C_value in C_values}
+
+    return ints, floats
+
+
 def genotype_from_expression(structure, simplify=True):
     """
     Parameters
@@ -49,22 +104,36 @@ def genotype_from_expression(structure, simplify=True):
 
     """
 
-    expression = make_sympy_expression(structure)
-    print(expression)
-    check = True
     if simplify:
-        while check: 
-            ints, floats = extract_constants(expression)
-            list_ints = list(ints.values())
+        expression, sqrt_check = make_sympy_expression(structure)
+        if "zoo" in str(expression) or "nan" in str(expression):
+            return None, {"I_0": np.nan}, {}, [[-1, 0, 0]]
+        ints, floats = check_unknowns(str(expression))
+        if sqrt_check:
+            ints[str(sqrt_check)] = 0.5
+        check = True
+        it = 0
+        while check:
+            expression = sympify(expression, evaluate=False)
+            _ints, _floats = extract_constants(expression, len(ints), len(floats))
+            ints, floats, check = update_ints_floats(ints, floats, _ints, _floats)
             expression = replace_constants(expression, ints)
-            expression = sympify(expression, evaluate=True)
-            ints, floats = extract_constants(expression)
             expression = replace_constants(expression, floats)
-            check = (len(list_ints) != 0)
+            it += 1
+            if it > 20:
+                print("Failed to generate genotype from expression!")
+                return None, {"I_0": np.nan}, {}, [[-1, 0, 0]]
+
+        if isinstance(sympy.simplify(expression), int):
+            return None, {"I_0": sympy.simplfiy(expression)}, {}, [[-1, 0, 0]]
+        if isinstance(sympy.simplify(expression), float):
+            return None, {}, {"C_0": sympy.simplfiy(expression)}, [[0, 0, 0]]
+
     else:
-        ints, floats = extract_constants(expression)
+        ints, floats = extract_constants(expression, 0, 0)
         expression = replace_constants(expression, ints)
         expression = replace_constants(expression, floats)
+
     genes = []
     row = 0
 
@@ -79,7 +148,6 @@ def genotype_from_expression(structure, simplify=True):
         nonlocal genes, row
 
         if isinstance(node, sympy.Symbol):
-            
             if "X" in str(node):
                 gene = update_genes([1, int(str(node)[2:]), int(str(node)[2:])])
                 return {"var": {"symbol": str(node), "gene": gene}}
@@ -87,15 +155,10 @@ def genotype_from_expression(structure, simplify=True):
                 gene = update_genes([0, int(str(node)[2:]), int(str(node)[2:])])
                 return {"const": {"symbol": str(node), "gene": gene}}
             elif "R" in str(node) or "I" in str(node):
-                if str(node).count("_") == 2:
-                    n, d = str(node).split("_")[1:]
-                    value = eval(n) / eval(d)
-                else:
-                    value = eval(str(node)[2:])
-                gene = update_genes([-1, value, value])
+                gene = update_genes([-1, int(str(node)[2:]), int(str(node)[2:])])
                 return {"pconst": {"symbol": str(node), "gene": gene}}
             else:
-                gene = update_genes([op_dict[str(node)], row-1, row-1])
+                gene = update_genes([op_dict[str(node)], row - 1, row - 1])
                 return {get_op(node): {"symbol": str(node), "gene": gene}}
 
         else:
@@ -117,7 +180,6 @@ def genotype_from_expression(structure, simplify=True):
         """
         nonlocal genes, row
         if len(structure) == 1:
-
             if unary_op(op):
                 row_u = structure[0][next(iter(structure[0]))]["gene"][1]
                 gene = update_genes([op_dict[op], row_u, row_u])
@@ -143,14 +205,14 @@ def genotype_from_expression(structure, simplify=True):
 
         else:
             rows = [s[next(iter(s))]["gene"][1] for s in structure]
-            for i in range(len(rows)-1):
+            for i in range(len(rows) - 1):
                 if i == 0:
                     row1 = rows[i]
-                    row2 = rows[i+1]
+                    row2 = rows[i + 1]
                     gene = update_genes([op_dict[op], row1, row2])
                 else:
-                    row1 = row-1
-                    row2 = rows[i+1]
+                    row1 = row - 1
+                    row2 = rows[i + 1]
                     gene = update_genes([op_dict[op], row1, row2])
             return {
                 op: {
@@ -183,6 +245,7 @@ def genotype_from_expression(structure, simplify=True):
     genes = clean_constants_in_genes(genes)
     return structure_dict, ints, floats, genes
 
+
 def clean_constants_in_genes(genes):
     """
     Parameters
@@ -190,12 +253,18 @@ def clean_constants_in_genes(genes):
     genes : [Argument]
 
     """
-    constant_idxs = np.argwhere(genes[:,0].flatten()==0).flatten()
-    constant_tags = np.unique(genes[constant_idxs,1])
+    constant_idxs = np.argwhere(genes[:, 0].flatten() == 0).flatten()
+    constant_tags = np.unique(genes[constant_idxs, 1])
     for i, constant_tag in enumerate(constant_tags):
-        constant_tag_idxs = np.argwhere(genes[constant_idxs,1]==constant_tag)
+        constant_tag_idxs = np.argwhere(genes[constant_idxs, 1] == constant_tag)
         genes[constant_idxs[constant_tag_idxs], 1:] = i
-     
+
+    Iconstant_idxs = np.argwhere(genes[:, -1].flatten() == 0).flatten()
+    Iconstant_tags = np.unique(genes[Iconstant_idxs, 1])
+    for i, Iconstant_tag in enumerate(Iconstant_tags):
+        Iconstant_tag_idxs = np.argwhere(genes[Iconstant_idxs, 1] == Iconstant_tag)
+        genes[Iconstant_idxs[Iconstant_tag_idxs], 1:] = i
+
     return genes
 
 
@@ -206,8 +275,23 @@ def unary_op(op):
     op : [Argument]
 
     """
-    return op in ["square", "e", "exp", "log", "sin", "cos", "tan", 
-                    "asin", "acos", "atan", "sinh", "cosh", "tanh"]
+    return op in [
+        "square",
+        "sqrt",
+        "e",
+        "exp",
+        "log",
+        "sin",
+        "cos",
+        "tan",
+        "asin",
+        "acos",
+        "atan",
+        "sinh",
+        "cosh",
+        "tanh",
+    ]
+
 
 def make_sympy_expression(string):
     """
@@ -225,29 +309,62 @@ def make_sympy_expression(string):
         if not unary_op(var):
             variables.append(var)
     symbols = [sympy.Symbol(v) for v in variables]
-    sdict = {str(v):sympy.Symbol(v) for v in variables}
+    sdict = {str(v): sympy.Symbol(v) for v in variables}
+    expr = sympify(string, evaluate=False, locals=sdict)
+    if "sqrt" in pre_variables:
+        I_terms = sum(["R_" in key for key in sdict.keys()])
+        sqrt_symbol = sympy.Symbol(f"R_{I_terms}")
+        expr = replace_sqrt(expr, sqrt_symbol)
+        return expr, sqrt_symbol
+    return expr, False
 
-    return sympify(string, evaluate=False, locals=sdict)
+
+def replace_sqrt(expr, value):
+    """
+    Parameters
+    ----------
+    expr : [Argument]
+    value : [Argument]
+
+    """
+    if expr.is_Pow:
+        base = replace_sqrt(expr.base, value)
+        if expr.exp == (1 / 2):
+            exp = value
+        else:
+            exp = replace_sqrt(expr.exp, value)
+        return base**exp
+    elif expr.is_Function and expr.func == sqrt:
+        return expr.args[0] ** value
+    elif hasattr(expr, "args"):
+        if len(expr.args) == 0:
+            return expr
+        return expr.func(*[replace_sqrt(arg, value) for arg in expr.args])
+    else:
+        return expr
 
 
-def extract_constants(expression):
+def extract_constants(expression, ints_offset, floats_offset):
     """
     Parameters
     ----------
     expression : [Argument]
+    ints_offset : [Argument]
+    floats_offset : [Argument]
 
     """
     ints = {}
     floats = {}
+
     for term in expression.atoms():
         if term.is_constant():
             if isinstance(term, Integer):
-                ints[f"I_{term}"] = int(term)
+                ints[f"I_{len(ints)+ints_offset}"] = int(term)
             elif isinstance(term, Float):
-                floats[f"C_{len(floats)}"] = float(term)
+                floats[f"C_{len(floats)+floats_offset}"] = float(term)
             elif isinstance(term, Rational):
                 n, d = fraction(term)
-                ints[f"R_{n}_{d}"] = term
+                ints[f"R_{len(ints)+ints_offset}"] = float(term)
             else:
                 raise NotImplementedError("extract constant unknown")
 
@@ -264,15 +381,8 @@ def replace_constants(expression, consts_dict):
     """
     replacement_symbols = [sympy.Symbol(symbol) for symbol in consts_dict.keys()]
     replaced_expression = expression.subs(
-        list(zip(consts_dict.values(), replacement_symbols))
+        dict(zip(consts_dict.values(), replacement_symbols)), evaluate=False
     )
-    """
-    Parameters
-    ----------
-    expression : [Argument]
-    consts_dict : [Argument]
-
-    """
     return replaced_expression
 
 
@@ -303,16 +413,10 @@ def get_op(node):
     """
     if isinstance(node, sympy.Add):
         return "add"
-    # elif isinstance(node, sympy.Sub):
-    #    return "sub"
     elif isinstance(node, sympy.Mul):
         return "mul"
-    # elif isinstance(node, sympy.Div):
-    #    return "div"
     elif isinstance(node, sympy.Pow):
         return "pow"
-    # elif isinstance(node, sympy.sqrt):
-    #    return "sqrt"
     elif str(node) == "exp" or isinstance(node, sympy.exp):
         return "exp"
     elif str(node) == "log" or isinstance(node, sympy.log):

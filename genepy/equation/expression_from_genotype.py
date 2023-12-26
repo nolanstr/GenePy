@@ -1,5 +1,5 @@
-from genepy.nodes.base_nodes import *
-from genepy.nodes.trig_nodes import *
+from ..nodes.base_nodes import *
+from ..nodes.trig_nodes import *
 
 NODE_DICT = {
     "-1": IConst,

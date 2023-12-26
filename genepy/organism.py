@@ -1,13 +1,14 @@
 import copy
 from abc import abstractmethod
 
+
 class Organism:
     def __init__(self):
         """
         Parameters
         ----------
-        self : [Argument]
-        genotype : [Argument]
+        self : object [Argument]
+            genotype : [Argument]
         expression : [Argument]
         age :default: 0 [Argument]
         fitness :default: None [Argument]
@@ -23,7 +24,7 @@ class Organism:
         """
         Parameters
         ----------
-        self : [Argument]
+        self : object [Argument]
 
         """
         return self._genotype
@@ -33,7 +34,7 @@ class Organism:
         """
         Parameters
         ----------
-        self : [Argument]
+        self : object [Argument]
 
         """
         return self._expression
@@ -43,7 +44,7 @@ class Organism:
         """
         Parameters
         ----------
-        self : [Argument]
+        self : object [Argument]
 
         """
         return self._age
@@ -53,7 +54,7 @@ class Organism:
         """
         Parameters
         ----------
-        self : [Argument]
+        self : object [Argument]
 
         """
         return self._fitness
@@ -63,7 +64,7 @@ class Organism:
         """
         Parameters
         ----------
-        self : [Argument]
+        self : object [Argument]
         genotype : [Argument]
 
         """
@@ -74,18 +75,18 @@ class Organism:
         """
         Parameters
         ----------
-        self : [Argument]
+        self : object [Argument]
         expression : [Argument]
 
         """
-        self.expression = expression
+        self._expression = expression
 
     @age.setter
     def age(self, age):
         """
         Parameters
         ----------
-        self : [Argument]
+        self : object [Argument]
         age : [Argument]
 
         """
@@ -96,7 +97,7 @@ class Organism:
         """
         Parameters
         ----------
-        self : [Argument]
+        self : object [Argument]
         fitness : [Argument]
 
         """
@@ -107,17 +108,17 @@ class Organism:
         """
         Parameters
         ----------
-        self : [Argument]
+        self : object [Argument]
 
         """
         raise NotImplementedError
-    
+
     @abstractmethod
     def __str__(self):
         """
         Parameters
         ----------
-        self : [Argument]
+        self : object [Argument]
 
         """
         raise NotImplementedError

@@ -1,232 +1,262 @@
 import torch
 
+
 class Sin:
-    def forward(_x, agraph_evals, agraph_consts, node1, node2):
+    def forward(_x, genotype_evals, genotype_consts, genotype_Iconsts, node1, node2):
         """
         Parameters
         ----------
         _x : [Argument]
-        agraph_evals : [Argument]
-        agraph_consts : [Argument]
+        genotype_evals : [Argument]
+        genotype_consts : [Argument]
+            node1 : [Argument]
+        node2 : [Argument]
+        genotype_Iconsts : [Argument]
         node1 : [Argument]
         node2 : [Argument]
 
         """
-        return torch.sin(agraph_evals[node1])
+        return torch.sin(genotype_evals[node1])
 
-    def _string(agraph_strings, node1, node2):
+    def _string(genotype_strings, node1, node2):
         """
         Parameters
         ----------
-        agraph_strings : [Argument]
+        genotype_strings : [Argument]
         node1 : [Argument]
         node2 : [Argument]
 
         """
-        return f"sin({agraph_strings[node1]})"
+        return f"sin({genotype_strings[node1]})"
+
 
 class Cos:
-    def forward(_x, agraph_evals, agraph_consts, node1, node2):
+    def forward(_x, genotype_evals, genotype_consts, genotype_Iconsts, node1, node2):
         """
         Parameters
         ----------
         _x : [Argument]
-        agraph_evals : [Argument]
-        agraph_consts : [Argument]
+        genotype_evals : [Argument]
+        genotype_consts : [Argument]
+            node1 : [Argument]
+        node2 : [Argument]
+        genotype_Iconsts : [Argument]
         node1 : [Argument]
         node2 : [Argument]
 
         """
-        return torch.cos(agraph_evals[node1])
+        return torch.cos(genotype_evals[node1])
 
-    def _string(agraph_strings, node1, node2):
+    def _string(genotype_strings, node1, node2):
         """
         Parameters
         ----------
-        agraph_strings : [Argument]
+        genotype_strings : [Argument]
         node1 : [Argument]
         node2 : [Argument]
 
         """
-        return f"cos({agraph_strings[node1]})"
+        return f"cos({genotype_strings[node1]})"
+
 
 class Tan:
-    def forward(_x, agraph_evals, agraph_consts, node1, node2):
+    def forward(_x, genotype_evals, genotype_consts, genotype_Iconsts, node1, node2):
         """
         Parameters
         ----------
         _x : [Argument]
-        agraph_evals : [Argument]
-        agraph_consts : [Argument]
+        genotype_evals : [Argument]
+        genotype_consts : [Argument]
+            node1 : [Argument]
+        node2 : [Argument]
+        genotype_Iconsts : [Argument]
         node1 : [Argument]
         node2 : [Argument]
 
         """
-        return torch.tan(agraph_evals[node1])
+        return torch.tan(genotype_evals[node1])
 
-    def _string(agraph_strings, node1, node2):
+    def _string(genotype_strings, node1, node2):
         """
         Parameters
         ----------
-        agraph_strings : [Argument]
+        genotype_strings : [Argument]
         node1 : [Argument]
         node2 : [Argument]
 
         """
-        return f"tan({agraph_strings[node1]})"
+        return f"tan({genotype_strings[node1]})"
+
 
 class ASin:
-
-    def forward(_x, agraph_evals, agraph_consts, node1, node2):
+    def forward(_x, genotype_evals, genotype_consts, genotype_Iconsts, node1, node2):
         """
         Parameters
         ----------
         _x : [Argument]
-        agraph_evals : [Argument]
-        agraph_consts : [Argument]
+        genotype_evals : [Argument]
+        genotype_consts : [Argument]
+            node1 : [Argument]
+        node2 : [Argument]
+        genotype_Iconsts : [Argument]
         node1 : [Argument]
         node2 : [Argument]
 
         """
-        return torch.asin(agraph_evals[node1])
+        return torch.asin(genotype_evals[node1])
 
-    def _string(agraph_strings, node1, node2):
+    def _string(genotype_strings, node1, node2):
         """
         Parameters
         ----------
-        agraph_strings : [Argument]
+        genotype_strings : [Argument]
         node1 : [Argument]
         node2 : [Argument]
 
         """
-        return f"asin({agraph_strings[node1]})"
+        return f"asin({genotype_strings[node1]})"
+
 
 class ACos:
-
-    def forward(_x, agraph_evals, agraph_consts, node1, node2):
+    def forward(_x, genotype_evals, genotype_consts, genotype_Iconsts, node1, node2):
         """
         Parameters
         ----------
         _x : [Argument]
-        agraph_evals : [Argument]
-        agraph_consts : [Argument]
+        genotype_evals : [Argument]
+        genotype_consts : [Argument]
+            node1 : [Argument]
+        node2 : [Argument]
+        genotype_Iconsts : [Argument]
         node1 : [Argument]
         node2 : [Argument]
 
         """
-        return torch.acos(agraph_evals[node1])
+        return torch.acos(genotype_evals[node1])
 
-    def _string(agraph_strings, node1, node2):
+    def _string(genotype_strings, node1, node2):
         """
         Parameters
         ----------
-        agraph_strings : [Argument]
+        genotype_strings : [Argument]
         node1 : [Argument]
         node2 : [Argument]
 
         """
-        return f"acos({agraph_strings[node1]})"
+        return f"acos({genotype_strings[node1]})"
+
 
 class ATan:
-
-    def forward(_x, agraph_evals, agraph_consts, node1, node2):
+    def forward(_x, genotype_evals, genotype_consts, genotype_Iconsts, node1, node2):
         """
         Parameters
         ----------
         _x : [Argument]
-        agraph_evals : [Argument]
-        agraph_consts : [Argument]
+        genotype_evals : [Argument]
+        genotype_consts : [Argument]
+            node1 : [Argument]
+        node2 : [Argument]
+        genotype_Iconsts : [Argument]
         node1 : [Argument]
         node2 : [Argument]
 
         """
-        return torch.atan(agraph_evals[node1])
+        return torch.atan(genotype_evals[node1])
 
-    def _string(agraph_strings, node1, node2):
+    def _string(genotype_strings, node1, node2):
         """
         Parameters
         ----------
-        agraph_strings : [Argument]
+        genotype_strings : [Argument]
         node1 : [Argument]
         node2 : [Argument]
 
         """
-        return f"atan({agraph_strings[node1]})"
+        return f"atan({genotype_strings[node1]})"
+
 
 class Sinh:
-
-    def forward(_x, agraph_evals, agraph_consts, node1, node2):
+    def forward(_x, genotype_evals, genotype_consts, genotype_Iconsts, node1, node2):
         """
         Parameters
         ----------
         _x : [Argument]
-        agraph_evals : [Argument]
-        agraph_consts : [Argument]
+        genotype_evals : [Argument]
+        genotype_consts : [Argument]
+            node1 : [Argument]
+        node2 : [Argument]
+        genotype_Iconsts : [Argument]
         node1 : [Argument]
         node2 : [Argument]
 
         """
-        return torch.sinh(agraph_evals[node1])
+        return torch.sinh(genotype_evals[node1])
 
-    def _string(agraph_strings, node1, node2):
+    def _string(genotype_strings, node1, node2):
         """
         Parameters
         ----------
-        agraph_strings : [Argument]
+        genotype_strings : [Argument]
         node1 : [Argument]
         node2 : [Argument]
 
         """
-        return f"sinh({agraph_strings[node1]})"
+        return f"sinh({genotype_strings[node1]})"
+
 
 class Cosh:
-
-    def forward(_x, agraph_evals, agraph_consts, node1, node2):
+    def forward(_x, genotype_evals, genotype_consts, genotype_Iconsts, node1, node2):
         """
         Parameters
         ----------
         _x : [Argument]
-        agraph_evals : [Argument]
-        agraph_consts : [Argument]
+        genotype_evals : [Argument]
+        genotype_consts : [Argument]
+            node1 : [Argument]
+        node2 : [Argument]
+        genotype_Iconsts : [Argument]
         node1 : [Argument]
         node2 : [Argument]
 
         """
-        return torch.cosh(agraph_evals[node1])
+        return torch.cosh(genotype_evals[node1])
 
-    def _string(agraph_strings, node1, node2):
+    def _string(genotype_strings, node1, node2):
         """
         Parameters
         ----------
-        agraph_strings : [Argument]
+        genotype_strings : [Argument]
         node1 : [Argument]
         node2 : [Argument]
 
         """
-        return f"cosh({agraph_strings[node1]})"
+        return f"cosh({genotype_strings[node1]})"
+
 
 class Tanh:
-
-    def forward(_x, agraph_evals, agraph_consts, node1, node2):
+    def forward(_x, genotype_evals, genotype_consts, genotype_Iconsts, node1, node2):
         """
         Parameters
         ----------
         _x : [Argument]
-        agraph_evals : [Argument]
-        agraph_consts : [Argument]
+        genotype_evals : [Argument]
+        genotype_consts : [Argument]
+            node1 : [Argument]
+        node2 : [Argument]
+        genotype_Iconsts : [Argument]
         node1 : [Argument]
         node2 : [Argument]
 
         """
-        return torch.tanh(agraph_evals[node1])
+        return torch.tanh(genotype_evals[node1])
 
-    def _string(agraph_strings, node1, node2):
+    def _string(genotype_strings, node1, node2):
         """
         Parameters
         ----------
-        agraph_strings : [Argument]
+        genotype_strings : [Argument]
         node1 : [Argument]
         node2 : [Argument]
 
         """
-        return f"tanh({agraph_strings[node1]})"
+        return f"tanh({genotype_strings[node1]})"

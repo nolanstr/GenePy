@@ -3,18 +3,19 @@ import numpy as np
 from ..equation import Equation
 
 UNIVARIATE_DICT = {
-    "sqrt": 7,
-    "exp": 8,
-    "log": 9,
-    "sin": 10,
-    "cos": 11,
-    "tan": 12,
-    "asin": 13,
-    "acos": 14,
-    "atan": 15,
-    "sinh": 16,
-    "cosh": 17,
-    "tanh": 18,
+    "square": 7,
+    "sqrt": 8,
+    "exp": 9,
+    "log": 10,
+    "sin": 11,
+    "cos": 12,
+    "tan": 13,
+    "asin": 14,
+    "acos": 15,
+    "atan": 16,
+    "sinh": 17,
+    "cosh": 18,
+    "tanh": 19,
 }
 
 BIVARIATE_DICT = {
@@ -69,7 +70,7 @@ class Generator:
         genotype = self.generate_genotype()
         equation = Equation(genotype=genotype)
         return equation
-    
+
     def add_operators(self, operators):
         """
         Parameters
@@ -134,11 +135,11 @@ class Generator:
         current_stack_size : [Argument]
 
         """
-        if len(operators) == len(self._operators) and \
-                                    len(self._operators)>2:
+        if len(operators) == len(self._operators) and len(self._operators) > 2:
             non_leaf_count = len(operators) - 2
-            operator = np.random.choice(operators, 
-                    p=[0.1, 0.1]+[0.8/non_leaf_count]*non_leaf_count)
+            operator = np.random.choice(
+                operators, p=[0.1, 0.1] + [0.8 / non_leaf_count] * non_leaf_count
+            )
         else:
             operator = np.random.choice(operators)
 
@@ -149,7 +150,7 @@ class Generator:
             gene = [operator] + self._sample_X_idx()
         elif operator in self._univariate_nodes:
             node = self._sample_nodes(current_stack_size, n=1)
-            gene = [operator] + node*2
+            gene = [operator] + node * 2
         else:
             nodes = self._sample_nodes(current_stack_size, n=2)
             gene = [operator] + nodes
@@ -165,9 +166,13 @@ class Generator:
             n : [Argument]
         n : [Argument]
             n : [Argument]
+        n : [Argument]
+            n : [Argument]
+        n : [Argument]
+            n : [Argument]
 
         """
-        #p = np.exp(current_stack_size)
+        # p = np.exp(current_stack_size)
         idxs = np.arange(0, current_stack_size)
         nodes = np.random.randint(0, current_stack_size, size=n).tolist()
         return nodes
